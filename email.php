@@ -1,46 +1,44 @@
 <?php
+use PHPMailer\PHPMailer\PHPMailer;
 
-     $file = $_POST['file'];
+require 'vendor/autoload.php';
 
-     $email = $_POST['email'];
+var_dump($_FILES);
 
-    require $_SERVER["DOCUMENT_ROOT"] . '/PHPMailer/PHPMailerAutoload.php';
+// Get all form fields you wish to add to your mail
+$email   = $_POST[ 'email' ];
+$name    = $_POST[ 'name' ];
+$message = $_POST[ 'message' ];
 
-        $mail = new PHPMailer;
+// Get uploaded file temp and file name
+$file_tmp  = $_FILES[ 'file' ][ 'tmp_name' ];
+$file_name = $_FILES[ 'file' ][ 'name' ];
 
-        $mail->isSMTP();
-        $mail->SMTPDebug  = 0;
-        $mail->Debugoutput = 'html';
-        $mail->Host = 'ledikdent.si';
-        $mail->SMTPAuth = true;
-        $mail->Username = 'formtest@ledikdent.si';
-        $mail->Password = 'formaforma';
-        $mail->From = $email;
-        $mail->SMTPSecure = 'tls';
-        $mail->Port = '465';
+// Move uploaded file from temp to uploads folder
+move_uploaded_file( $file_tmp, "uploads/" . $file_name ); // we can remove this if we don't want to keep files on server
 
-        $mail->setFrom('formtest@ledikdent.si');
+$mail = new PHPMailer;
 
-        $mail->addAddress('lalasac1@gmail.com', 'Mirza');
+$mail->isSMTP();
+$mail->SMTPAuth = true;
 
-        $mail->Subject = utf8_decode("Thank you for signing up");
+$mail->Host       = 'ledikdent.si';
+$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+$mail->port       = 465;
+$mail->Username   = 'formtest@ledikdent.si';
+$mail->Password   = 'formaforma';
 
+$mail->setFrom( $email, $name );
+$mail->addAddress('upisisvojmail@zatestira.nje', 'Lala'); // Change this to email address you wish to receive sent mails
+$mail->AddAttachment( $file_tmp, $file_name );
 
-        move_uploaded_file($_FILES["file"]["tmp_name"],"./uploads" . $_FILES["file"]["name"]);
-        $filename = "./uploads" . $_FILES["file"]["name"];
-        $mail->AddAttachment($filename);
+$mail->Subject = 'Upit sa stranice lepi-zub.si';
+$mail->Body    = $message;
 
+$mail->send();
 
-        $mail->Body = ($file);
+echo 'Sent (possible redirect)';
 
-        //$mail->AltBody = utf8_decode($file);
-
-        if (!$mail->Send()) {
-            echo "error. <p>";
-            echo "Mailer Error: " . $mail->ErrorInfo;
-            exit;
-        }
-
-        echo "mail sent";
-
-?>
+// Redirect example
+header( 'Location: ' . 'https://google.com' );
+die();
