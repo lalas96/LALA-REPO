@@ -12,12 +12,12 @@
 	<body >
 		<div class="box5">
 			<form action="email.php" enctype="multipart/form-data" method="POST">
-				<label>Mail : </label>
-				<input name="email" type="text" placeholder="Your mail adress">
-				<input type="text" name="name" id="name" placeholder="Vaše cijenjeno ime">
-				<input type="text" name="message" id="message" placeholder="Vaša super poruka">
-				<input type="hidden" name="MAX_FILE_SIZE" value="300000" /> <?php // max file size 300kB ?>
-				<input type="file" name="file" id="file" />
+				<label for="email">Mail: </label>
+				<input name="email" id="email" type="text" placeholder="Your mail adress">
+				<input name="name" id="name" type="text" placeholder="Vaše cijenjeno ime">
+				<input name="message" id="message" type="text" placeholder="Vaša super poruka">
+				<input name="MAX_FILE_SIZE" type="hidden" value="300000" /> <?php // max file size 300kB ?>
+				<input name="file" id="file" type="file" />
 				<input type="submit" value="Send" name="submit">
 			</form>
 		</div>
